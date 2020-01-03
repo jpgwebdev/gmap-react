@@ -2,7 +2,7 @@ import React from 'react';
 import { Map, GoogleApiWrapper, Marker,InfoWindow } from 'google-maps-react';
 import './App.scss';
 import planeSvg from '../images/plane.svg';
-import hospitalSvg from '../images/hospital.svg';
+import hospitalSvg from '../images/hospitalfix.svg';
 import highwaySvg from '../images/highway.svg';
 import publicSvg from '../images/public_building.svg';
 import { withStyles } from '@material-ui/core/styles';
@@ -44,7 +44,8 @@ class App extends React.Component<any, any>{
       activeMarker: {},
       selectedPlace: {},
       showingInfoWindow: false,
-      selectValue:'ninguno'
+      selectValue:'todos',
+      radioValue:'todos'
     }
   }
 
@@ -102,6 +103,18 @@ class App extends React.Component<any, any>{
     });
   };
 
+  handleRadioChange = () => (event) => {
+    this.setState({
+      ...this.state,
+      filteredStores: this.state.stores.filter((store) => {
+        return store.estado == event.target.value;
+      }),
+      radioValue:event.target.value
+    },() =>{
+      console.log('Filtered: ',this.state.filteredStores);
+    });  
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -125,7 +138,13 @@ class App extends React.Component<any, any>{
       <div className="map-filters">
       <FormControl className={classes.formControl}>
         <FormLabel component="legend">Estado de Obra</FormLabel>
-        <RadioGroup aria-label="gender" name="gender2">
+        <RadioGroup aria-label="estado" name="estado" value={this.state.radioValue} onChange={this.handleRadioChange()}>
+          <FormControlLabel
+            value="todos"
+            control={<Radio color="primary" />}
+            label="Todos"
+            labelPlacement="end"
+          />
           <FormControlLabel
             value="explotacion"
             control={<Radio color="primary" />}
@@ -161,8 +180,8 @@ class App extends React.Component<any, any>{
           value={this.state.selectValue}
           onChange={this.handleChange('tipo')}
         >
-          <MenuItem value="ninguno">
-            <em>Ninguno</em>
+          <MenuItem value="todos">
+            <em>Todos</em>
           </MenuItem>
           <MenuItem value='riego'>Obras de Riego</MenuItem>
           <MenuItem value='publica'>Edificación Publica</MenuItem>
