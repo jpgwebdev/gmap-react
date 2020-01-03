@@ -1,0 +1,13 @@
+{
+    "include": [
+        "./app/*",
+    ],
+    "compilerOptions": {
+        "target": "es5",
+        "jsx": "react",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+    },
+    "files": [ "./custom.d.ts" ],
+}
