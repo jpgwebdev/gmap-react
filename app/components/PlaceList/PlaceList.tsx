@@ -23,9 +23,6 @@ class PlaceList extends React.Component<any, any>{
     }
   }
 
-  highlightMarker = (index) => {
-      return this.props.heyMarker(index);
-  }
 
   displayStore = () => {
     return this.state.stores.map((store, index) => {
@@ -52,7 +49,7 @@ class PlaceList extends React.Component<any, any>{
             color = '#454';
         }
         const type = store.type.charAt(0).toUpperCase() + store.type.slice(1)
-         return <li key={index} onMouseOver={this.highlightMarker(index)} style={{borderLeft:`4px solid ${color}`}} >
+         return <li key={index} style={{borderLeft:`4px solid ${color}`}} >
                     <div className="circle-img" style={{marginLeft:'10px',backgroundColor:color}}><img style={{width:'15px'}} 
                     src={"data:image/svg+xml;utf8,"+iconURL} />
                     </div>
@@ -69,7 +66,6 @@ class PlaceList extends React.Component<any, any>{
   }
 
   render() {
-
     return (
     <section className="place-list">
         <h1 style={{marginLeft:'10px'}}>Proyects</h1>

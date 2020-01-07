@@ -1,19 +1,38 @@
 import React from 'react';
-import '../App.scss';
-import {Marker} from 'google-maps-react';
-class CustomMarker extends React.Component<any, any>{
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-  constructor(props: any){
-    super(props);
+const Wrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  background-color: #000;
+  border: 2px solid #fff;
+  border-radius: 100%;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  cursor: ${props => (props.onClick ? 'pointer' : 'default')};
+  &:hover {
+    z-index: 1;
   }
+`;
 
+const CustomMarker = props => (
+  <Wrapper
+    alt={props.text}
+    {...props.onClick ? { onClick: props.onClick } : {}}
+  />
+);
 
-  render() {
+CustomMarker.defaultProps = {
+  onClick: null,
+};
 
-    return (
-    <Marker {...this.props} ></Marker>
-    );
-  }
-}
+CustomMarker.propTypes = {
+  onClick: PropTypes.func,
+  text: PropTypes.string.isRequired,
+};
 
 export default CustomMarker;
