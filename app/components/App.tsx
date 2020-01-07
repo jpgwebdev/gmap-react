@@ -1,10 +1,11 @@
 import React from 'react';
-import { Map, GoogleApiWrapper, Marker,InfoWindow } from 'google-maps-react';
+import { Map, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
 import './App.scss';
-import planeSvg from '../images/plane.svg';
+import planeSvg from '../images/airport.svg';
 import hospitalSvg from '../images/hospitalfix.svg';
-import highwaySvg from '../images/highway.svg';
 import publicSvg from '../images/public_building.svg';
+import routeSvg from '../images/route.svg';
+import trainSvg from '../images/train.svg';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
@@ -14,16 +15,14 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+import PlaceList from './PlaceList/PlaceList';
+import CustomMarker from './CustomMarker/CustomMarker';
 const styles = {
   formControl:{
     marginTop:'10px',
-    display: 'block'
+    display: 'block',
+    fontSize:'.8em'
   }
-};
-
-const defaultMapOptions = {
-  fullscreenControl: false,
 };
 
 class App extends React.Component<any, any>{
@@ -34,7 +33,7 @@ class App extends React.Component<any, any>{
     this.state = {
       stores: [
               {name:"Aeropuerto El Loa Calama", estado:'explotacion', type:'aeropuerto', lat: 47.49855629475769, lng: -122.14184416996333},
-              {name:"Embalse Convento Viejo", estado:'estudio', type:'riego', lat: 47.359423, lng: -122.021071},
+              {name:"Embalse Convento Viejo", estado:'estudio', type:'tren', lat: 47.359423, lng: -122.021071},
               {name:"Camino La Madera", estado:'construccion', type:'vial', lat: 47.2052192687988, lng: -121.988426208496},
               {name:"Tunel el Melón", estado:'licitacion', type:'vial', lat: 47.6307081, lng: -122.1434325},
               {name:"Hospital de Antofagasta", estado:'explotacion', type:'hospitalaria', lat: 47.3084488, lng: -122.2140121},
@@ -49,13 +48,14 @@ class App extends React.Component<any, any>{
     }
   }
 
-  onMarkerClick = (props, marker, e) =>
+  onMarkerClick = (props, marker, e) => {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
       showingInfoWindow: true
     });
- 
+  };
+
   onMapClicked = (props) => {
     if (this.state.showingInfoWindow) {
       this.setState({
@@ -64,7 +64,12 @@ class App extends React.Component<any, any>{
       })
     }
   };
-  
+
+  onMouseoverMarker(props, marker, e){
+    //console.log(marker);
+    //marker.icon.scaledSize = {width:40,height:40};
+  };
+
   displayMarkers = () => {
     return this.state.filteredStores.map((store, index) => {
       let iconURL;
@@ -72,20 +77,28 @@ class App extends React.Component<any, any>{
         iconURL = hospitalSvg;
       }else if(store.type == 'aeropuerto'){
         iconURL = planeSvg;
-      }else{
-        iconURL = planeSvg;
+      }else if(store.type == 'vial'){
+        iconURL = routeSvg;
+      }else if(store.type == 'tren'){
+        iconURL = trainSvg;
+      }else if(store.type == 'publica'){
+        iconURL = publicSvg;
       }
 
-      return <Marker 
+      return <CustomMarker 
         icon={{
           url:'data:image/svg+xml;utf8,'+iconURL,
           scaledSize:  new this.props.google.maps.Size(25,25),
         }} 
-        name={store.name} key={index} id={index} position={{
-        lat: store.lat,
-        lng: store.lng
-     }}
-     onClick={this.onMarkerClick} />
+        onMouseOver={this.onMouseoverMarker}
+        name={store.name} 
+        key={index} 
+        id={index} 
+        position={{
+          lat: store.lat,
+          lng: store.lng
+        }}
+      onClick={this.onMarkerClick} />
     })
   }
 
@@ -94,9 +107,9 @@ class App extends React.Component<any, any>{
   ) => {
     this.setState({
       ...this.state,
-      filteredStores: this.state.stores.filter((store) => {
+      filteredStores: event.target.value != 'todos' ? this.state.stores.filter((store) => {
         return store.type == event.target.value;
-      }),
+      }) : this.state.stores,
       selectValue:event.target.value
     },() =>{
       console.log('Filtered: ',this.state.filteredStores);
@@ -106,24 +119,35 @@ class App extends React.Component<any, any>{
   handleRadioChange = () => (event) => {
     this.setState({
       ...this.state,
-      filteredStores: this.state.stores.filter((store) => {
+      filteredStores: event.target.value != 'todos' ? this.state.stores.filter((store) => {
         return store.estado == event.target.value;
-      }),
+      }) : this.state.stores,
       radioValue:event.target.value
     },() =>{
       console.log('Filtered: ',this.state.filteredStores);
     });  
   }
 
+  hoverMarker(index){
+    console.log(index + " was hovered");
+  }
+
+  componentDidMount(){
+    if(this.state.filteredStores.length < 1){
+      this.setState({filteredStores:this.state.stores});
+    }
+  }
+
   render() {
     const { classes } = this.props;
     return (
     <section>
+        <PlaceList heyMarker={this.hoverMarker} selectedMarker={this.state.selectedPlace ? this.state.selectedPlace.id : 0}/>
         <Map
           google={this.props.google}
           zoom={8}
           id="map"
-          defaultOptions={defaultMapOptions}
+          disableDefaultUI={true}
           initialCenter={{ lat: 47.444, lng: -122.176}}
         >
           {this.displayMarkers()}

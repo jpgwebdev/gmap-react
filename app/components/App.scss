@@ -8,8 +8,8 @@ html,body{
     position: fixed;
     z-index: 99;
     min-height: 50vh;
-    top:30px;
-    right:30px;
+    top:10px;
+    right:10px;
     background: #fff;
     padding:30px;
     box-shadow:0px 4px 6px rgba(43,43,43,.3);
@@ -17,4 +17,45 @@ html,body{
 #map{
     height: 100vh;
     width:100%;
+}
+
+.place-list{
+    position: fixed;
+    top:0;
+    left:0;
+    z-index: 9;
+    height: 100vh;
+    width:300px;
+    background: #fff;
+    box-shadow:0px 4px 6px rgba(43,43,43,.3);
+}
+.place-list ul{
+    padding-left: 0;
+}
+.place-list li{
+    list-style: none;
+    border-bottom:1px solid #ccc;
+    padding:20px 0;
+}
+li {
+    display: flex;
+    align-items:center;
+}
+li .type{
+    color:#777;
+    margin-bottom: 5px;
+    font-size:.8em;
+}
+
+li:hover{
+    cursor: pointer;
+    background: #f2f2f2;
+}
+.circle-img{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    width:35px;
+    height: 35px;
 }
