@@ -1,31 +1,32 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
 import '../App.scss';
+import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 import planeSvg from '../../images/airport.svg';
 import hospitalSvg from '../../images/hospitalfix.svg';
 import publicSvg from '../../images/public_building.svg';
 import routeSvg from '../../images/route.svg';
 import trainSvg from '../../images/train.svg';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
-class PlaceList extends React.Component<any, any>{
+const useStyles = makeStyles(theme => ({
+  margin: {
+    margin: theme.spacing(1),
+  },
+}));
 
-  constructor(props: any){
-    super(props);
+export default function PlaceList(props){
+  
+  const classes = useStyles();
+  
+  const [points, setPoints] = useState([]);
 
-    this.state = {
-      stores: [
-              {name:"Aeropuerto El Loa Calama", estado:'explotacion', type:'aeropuerto', lat: 47.49855629475769, lng: -122.14184416996333},
-              {name:"Embalse Convento Viejo", estado:'estudio', type:'tren', lat: 47.359423, lng: -122.021071},
-              {name:"Camino La Madera", estado:'construccion', type:'vial', lat: 47.2052192687988, lng: -121.988426208496},
-              {name:"Tunel el Melón", estado:'licitacion', type:'vial', lat: 47.6307081, lng: -122.1434325},
-              {name:"Hospital de Antofagasta", estado:'explotacion', type:'hospitalaria', lat: 47.3084488, lng: -122.2140121},
-              {name:"Puerto Terrestre Los Andes", estado:'licitacion', type:'publica', lat: 47.5524695, lng: -122.0425407}
-              ],
-    }
-  }
-
-
-  displayStore = () => {
-    return this.state.stores.map((store, index) => {
+  const displayStore = () => {
+    return points.map((store, index) => {
         let iconURL;
         if(store.type == 'hospitalaria'){
           iconURL = hospitalSvg;
@@ -61,20 +62,30 @@ class PlaceList extends React.Component<any, any>{
       });
   }
 
-  componentDidUpdate(){
-    console.log(this.props.selectedMarker);
-  }
 
-  render() {
-    return (
-    <section className="place-list">
-        <h1 style={{marginLeft:'10px'}}>Proyects</h1>
-        <ul>
-            {this.displayStore()}
-        </ul>
-    </section>
-    );
-  }
+  useEffect(() => {
+      setPoints(props.points);
+  }, [props.points]);
+
+
+  return (
+  <section className="place-list">
+    <FormControl className={classes.margin}>
+      <InputLabel htmlFor="input-with-icon-adornment">Buscar proyectos</InputLabel>
+      <Input
+        id="input-with-icon-adornment"
+        startAdornment={
+          <InputAdornment position="start">
+            <AccountCircle />
+          </InputAdornment>
+        }
+      />
+    </FormControl>
+      <h1 style={{marginLeft:'10px'}}>Proyects</h1>
+      <ul>
+          {displayStore()}
+      </ul>
+  </section>
+  );
+  
 }
-
-export default PlaceList;

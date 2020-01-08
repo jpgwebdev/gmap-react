@@ -16,9 +16,9 @@ const styles = {
       fontSize:'.8em'
     }
   };
-class PlaceList extends React.Component<any, any>{
+class PlaceList extends React.Component{
 
-  constructor(props: any){
+  constructor(props){
     super(props);
     this.state = {
         selectValue:'todos',
@@ -26,9 +26,7 @@ class PlaceList extends React.Component<any, any>{
     }
   }
 
-  handleChange = (name) => (
-    event: React.ChangeEvent<{ value: unknown }>,
-  ) => {
+  handleChange = (name) => (event) => {
     this.setState({
       ...this.state,
       filteredStores: event.target.value != 'todos' ? this.state.stores.filter((store) => {

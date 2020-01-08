@@ -10,39 +10,34 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
-const styles = (theme: Theme) =>
-  createStyles({
+
+const styles = theme => ({
     root: {
-      margin: 0,
-      padding: theme.spacing(2),
+        margin: 0,
+        padding: theme.spacing(2),
     },
     closeButton: {
-      position: 'absolute',
-      right: theme.spacing(1),
-      top: theme.spacing(1),
-      color: theme.palette.grey[500],
+        position: 'absolute',
+        right: theme.spacing(1),
+        top: theme.spacing(1),
+        color: theme.palette.grey[500],
     },
-  });
+});
 
-export interface DialogTitleProps extends WithStyles<typeof styles> {
-  id: string;
-  children: React.ReactNode;
-  onClose: () => void;
-}
 
-const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
+const DialogTitle = withStyles(styles)(props => {
     const { children, classes, onClose, ...other } = props;
     return (
-        <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <MuiDialogTitle disableTypography className={classes.root} {...other}>
         <Typography variant="h6">{children}</Typography>
         {onClose ? (
-            <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
             <CloseIcon />
-            </IconButton>
+          </IconButton>
         ) : null}
-        </MuiDialogTitle>
+      </MuiDialogTitle>
     );
-});
+  });
   
 const DialogContent = withStyles(theme => ({
     root: {
@@ -57,22 +52,26 @@ const DialogActions = withStyles(theme => ({
     },
 }))(MuiDialogActions);
   
-export default function InfoDialog(){
+export default function InfoDialog(props){
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(props.openDialog);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+    const [data, setData] = React.useState(props.data);
+
     const handleClose = () => {
-        setOpen(false);
+        console.log('click close');
+        props.parentStatus(false);
     };
 
+    React.useEffect(() => {
+        setOpen(props.openDialog);
+        setData(props.data);
+    }, [props.openDialog, props.data]);
 
     return (
     <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Modal title
+            {data ? data.name : 'No hay titulo'}
         </DialogTitle>
         <DialogContent dividers>
             <Typography gutterBottom>
@@ -91,7 +90,7 @@ export default function InfoDialog(){
         </DialogContent>
         <DialogActions>
             <Button autoFocus onClick={handleClose} color="primary">
-            Save changes
+            Close
             </Button>
         </DialogActions>
         </Dialog>

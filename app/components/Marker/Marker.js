@@ -6,10 +6,9 @@ const Wrapper = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 18px;
-  height: 18px;
-  background-color: #000;
-  border: 2px solid #fff;
+  width: 25px;
+  height: 25px;
+  background-color: ${props => (props.borderColor ? props.borderColor : '#999 ')};
   border-radius: 100%;
   user-select: none;
   transform: translate(-50%, -50%);
@@ -19,20 +18,23 @@ const Wrapper = styled.div`
   }
 `;
 
-const CustomMarker = props => (
+const Marker = props => (
   <Wrapper
-    alt={props.text}
+    {...props}
     {...props.onClick ? { onClick: props.onClick } : {}}
-  />
+  >
+    <img style={{marginLeft:'5px',marginTop:'3px',width:'17px',height:'17px'}} src={'data:image/svg+xml;utf8,'+props.icon} alt="aeropuerto"/>
+  </Wrapper>
 );
 
-CustomMarker.defaultProps = {
+Marker.defaultProps = {
   onClick: null,
 };
 
-CustomMarker.propTypes = {
+Marker.propTypes = {
+  borderColor: PropTypes.string,
+  icon: PropTypes.string,
   onClick: PropTypes.func,
-  text: PropTypes.string.isRequired,
 };
 
-export default CustomMarker;
+export default Marker;
