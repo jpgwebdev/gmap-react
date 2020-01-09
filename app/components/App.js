@@ -77,22 +77,31 @@ export default function App(){
 
   const getEstadoFilters = (filters) => {
     //console.log('Filters in parent estado',filters);
-    filters.map((name) => {
-      console.log("Adding filter",name);
-      let other = filtered.filter(point => point.estado == name);
-      console.log(other);
-      setFiltered(other);
-    });
+    if(filters.length > 0){
+      filters.map((name) => {
+        console.log("Adding filter",name);
+        let other = filtered.filter(point => point.estado == name);
+        console.log(other);
+        setFiltered(other);
+      });
+    }else{
+      setFiltered(points);
+    }
   }
 
   const getTipoFilters = (filters) => {
     //console.log('Filters in parent tipo',filters);
-    filters.map((name) => {
-      console.log("Adding filter",name);
-      let other = filtered.filter(point => point.type == name);
-      console.log(other);
-      setFiltered(other);
-    });
+    if(filters.length > 0){
+      filters.map((name) => {
+        console.log("Adding filter",name);
+        let other = filtered.filter(point => point.type == name);
+        console.log(other);
+        setFiltered(other);
+      });
+    }else{
+      setFiltered(points);
+    }
+
 
   }
 
