@@ -76,33 +76,49 @@ export default function App(){
   }
 
   const getEstadoFilters = (filters) => {
-    //console.log('Filters in parent estado',filters);
+    console.log('Filters in parent estado',filters);
+    let newFilter = [];
     if(filters.length > 0){
-      filters.map((name) => {
-        console.log("Adding filter",name);
-        let other = filtered.filter(point => point.estado == name);
-        console.log(other);
-        setFiltered(other);
+      filters.map((name, index) => {
+        console.log('Por asignar',newFilter.length);
+        if(newFilter.length >= 1){
+          console.log('entro en concat');
+          console.log("Filtered array:",filtered);
+          newFilter = filtered.concat(points.filter(point => point.estado == name));
+        }else{
+          console.log('entro en no concat');
+          newFilter = points.filter(point => point.estado == name);
+        }
+        console.log("Filtrado #"+index+": ",newFilter);
+        setFiltered(newFilter);
       });
+
     }else{
       setFiltered(points);
     }
   }
 
   const getTipoFilters = (filters) => {
-    //console.log('Filters in parent tipo',filters);
+    console.log('Filters in parent estado',filters);
+    let newFilter = [];
     if(filters.length > 0){
-      filters.map((name) => {
-        console.log("Adding filter",name);
-        let other = filtered.filter(point => point.type == name);
-        console.log(other);
-        setFiltered(other);
+      filters.map((name, index) => {
+        console.log('Por asignar',newFilter.length);
+        if(newFilter.length >= 1){
+          console.log('entro en concat');
+          console.log("Filtered array:",filtered);
+          newFilter = filtered.concat(points.filter(point => point.type == name));
+        }else{
+          console.log('entro en no concat');
+          newFilter = points.filter(point => point.type == name);
+        }
+        console.log("Filtrado #"+index+": ",newFilter);
+        setFiltered(newFilter);
       });
+
     }else{
       setFiltered(points);
     }
-
-
   }
 
   // open dialog and pass data
