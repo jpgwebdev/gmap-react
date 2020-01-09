@@ -39,32 +39,65 @@ export default function App(){
   const mapRef = useRef();
 
   const [points, setPoints] = useState([]);
-
+  const [filtered, setFiltered] = useState([]);
+  //loader of markers call
   let [loading, setLoading] = useState(true);
-
+  
+  // dialog status to avoid permanent close of dialog if clicked multiple markers
   let [openDialog, setOpenDialog] = useState(false);
 
+  // send data to InfoDialog
   let [data, setData] = useState(null);
 
+  //load markers call
   const loadMarkers = () => {
     axios({
         method: 'GET',
-        url: `http://localhost/kaleida/mapacopsa/data.php`,
+        url: `http://git.kaleidadigital.com/mapacopsa/data.php`,
     })        
     .then(response => {
       console.log('Response',JSON.parse(response.data));
       setPoints(JSON.parse(response.data));
+      setFiltered(JSON.parse(response.data))
       setLoading(false);
     });
   }
 
+  // Open dialog if click item list
+  const openFromList = (index, name) => {
+    //console.log('Clicked child');
+    showDialogWithData(index, name);
+  }
+  
+  // change var dialog to closed if clicked close in infodialog component
   const dialogStatus = (status) => {
-    console.log('Status', status);
+    //console.log('Status', status);
     setOpenDialog(status);
   }
 
-  const onMarkerClick = (index, name) => (event) => {
-    console.log('Clicked marker #'+index);
+  const getEstadoFilters = (filters) => {
+    //console.log('Filters in parent estado',filters);
+    filters.map((name) => {
+      console.log("Adding filter",name);
+      let other = filtered.filter(point => point.estado == name);
+      console.log(other);
+      setFiltered(other);
+    });
+  }
+
+  const getTipoFilters = (filters) => {
+    //console.log('Filters in parent tipo',filters);
+    filters.map((name) => {
+      console.log("Adding filter",name);
+      let other = filtered.filter(point => point.type == name);
+      console.log(other);
+      setFiltered(other);
+    });
+
+  }
+
+  // open dialog and pass data
+  const showDialogWithData = (index, name) => {
     let data = {
       name: name
     }
@@ -72,6 +105,13 @@ export default function App(){
     setData(data);
   }
 
+  // on marker click
+  const onMarkerClick = (index, name) => (event) => {
+    //console.log('Clicked marker #'+index);
+    showDialogWithData(index, name);
+  }
+
+  //load markers
   useEffect(() => {
     loadMarkers();
   }, []);
@@ -88,15 +128,15 @@ export default function App(){
 
       <GoogleMapReact
         bootstrapURLKeys={{ key: 'AIzaSyCPrJBzd1PuG0sZnQd0IwVSJBUmxHxMvMY' }}
-        defaultCenter={{lat: 47.444, lng: -122.176}}
-        defaultZoom={10}
+        defaultCenter={{lat: -33.502491, lng: -70.654811}}
+        defaultZoom={5}
         options={createMapOptions}
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map }) => {
           mapRef.current = map;
         }}
       >
-      {points.length > 0 ? points.map((store, index) => {
+      {filtered.length > 0 ? filtered.map((store, index) => {
 
         let iconURL;
         if(store.type == 'hospitalaria'){
@@ -131,8 +171,8 @@ export default function App(){
           onClick={onMarkerClick(index, store.name)} />
       }) : ''}
       </GoogleMapReact>
-      <PlaceList points={points}/>
-      <FilterList/>
+      <PlaceList points={points} clickedLi={openFromList}/>
+      <FilterList estadoFilters={getEstadoFilters} tipoFilters={getTipoFilters}/>
       <InfoDialog openDialog={openDialog} data={data} parentStatus={dialogStatus}/>
   </section>
   );

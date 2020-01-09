@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -21,33 +21,37 @@ class PlaceList extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-        selectValue:'todos',
-        radioValue:'todos'
+        radioEstado:[],
+        radioTipo:[]
     }
   }
 
-  handleChange = (name) => (event) => {
-    this.setState({
-      ...this.state,
-      filteredStores: event.target.value != 'todos' ? this.state.stores.filter((store) => {
-        return store.type == event.target.value;
-      }) : this.state.stores,
-      selectValue:event.target.value
-    },() =>{
-      console.log('Filtered: ',this.state.filteredStores);
-    });
-  };
-
-  handleRadioChange = () => (event) => {
-    this.setState({
-      ...this.state,
-      filteredStores: event.target.value != 'todos' ? this.state.stores.filter((store) => {
-        return store.estado == event.target.value;
-      }) : this.state.stores,
-      radioValue:event.target.value
-    },() =>{
-      console.log('Filtered: ',this.state.filteredStores);
-    });  
+  handleRadioChange = (name) => (event) => {
+    let radioVal = event.target.value;
+    if(event.target.checked){
+      if(name == 'estado'){
+        this.setState(prevState=>({radioEstado:[...prevState.radioEstado,radioVal]}),() => {
+          //console.log('Updated array estado',this.state.radioEstado);
+          this.props.estadoFilters(this.state.radioEstado);
+        })
+      }else if(name == 'tipo'){
+        this.setState(prevState=>({radioTipo:[...prevState.radioTipo,radioVal]}),() => {
+          //console.log('Updated array tipo',this.state.radioTipo);
+          this.props.tipoFilters(this.state.radioTipo);
+        })
+      }
+    }else{
+      if(name == 'estado'){
+        this.setState(prevState => ({ radioEstado: prevState.radioEstado.filter(name => name !== radioVal) }),() => {
+          this.props.estadoFilters(this.state.radioEstado);
+        });
+      }else if(name  == 'tipo'){
+        this.setState(prevState => ({ radioTipo: prevState.radioTipo.filter(name => name !== radioVal) }),() => {
+          this.props.tipoFilters(this.state.radioTipo);
+        });
+      }
+      
+    }
   }
   
   render() {
@@ -56,58 +60,80 @@ class PlaceList extends React.Component{
         <div className="map-filters">
         <FormControl className={classes.formControl}>
         <FormLabel component="legend">Estado de Obra</FormLabel>
-        <RadioGroup aria-label="estado" name="estado" value={this.state.radioValue} onChange={this.handleRadioChange()}>
+        <FormGroup aria-label="estado">
+          
             <FormControlLabel
-            value="todos"
-            control={<Radio color="primary" />}
+            control={<Checkbox color="primary" value="todos" onChange={this.handleRadioChange('estado')}/>}
             label="Todos"
             labelPlacement="end"
             />
+
             <FormControlLabel
-            value="explotacion"
-            control={<Radio color="primary" />}
+            control={<Checkbox color="primary" value="explotacion" onChange={this.handleRadioChange('estado')}/>}
             label="Explotación"
             labelPlacement="end"
             />
+
             <FormControlLabel
-            value="construccion"
-            control={<Radio color="primary" />}
+            control={<Checkbox color="primary" value="construccion" onChange={this.handleRadioChange('estado')}/>}
             label="Construcción"
             labelPlacement="end"
             />
+
             <FormControlLabel
-            value="licitacion"
-            control={<Radio color="primary" />}
+            control={<Checkbox color="primary" value="licitacion" onChange={this.handleRadioChange('estado')}/>}
             label="Licitación"
             labelPlacement="end"
             />
+
             <FormControlLabel
-            value="estudio"
-            control={<Radio color="primary" />}
+            control={<Checkbox color="primary" value="estudio" onChange={this.handleRadioChange('estado')}/>}
             label="Estudio"
             labelPlacement="end"
             />
-        </RadioGroup>
+
+        </FormGroup>
         </FormControl>
         <FormControl className={classes.formControl}>
         <FormLabel component="legend">Tipo de Obra</FormLabel>
-        <Select
-            labelId="demo-simple-select-helper-label"
-            id="demo-simple-select-helper"
-            style={{width:'100%'}}
-            value={this.state.selectValue}
-            onChange={this.handleChange('tipo')}
-        >
-            <MenuItem value="todos">
-            <em>Todos</em>
-            </MenuItem>
-            <MenuItem value='riego'>Obras de Riego</MenuItem>
-            <MenuItem value='publica'>Edificación Publica</MenuItem>
-            <MenuItem value='aeropuerto'>Aeropuertaria</MenuItem>
-            <MenuItem value='vial'>Obra Vial</MenuItem>
-            <MenuItem value='penitenciaria'>Penitenciaria</MenuItem>
-            <MenuItem value='hospitalaria'>Hospitalaria</MenuItem>
-        </Select>
+        <FormGroup aria-label="estado">
+          
+          <FormControlLabel
+          control={<Checkbox color="secondary" value="todos" onChange={this.handleRadioChange('tipo')}/>}
+          label="Todos"
+          labelPlacement="end"
+          />
+
+          <FormControlLabel
+          control={<Checkbox color="secondary" value="riego" onChange={this.handleRadioChange('tipo')}/>}
+          label="Obras de riego"
+          labelPlacement="end"
+          />
+
+          <FormControlLabel
+          control={<Checkbox color="secondary" value="publica" onChange={this.handleRadioChange('tipo')}/>}
+          label="Edificación publica"
+          labelPlacement="end"
+          />
+
+          <FormControlLabel
+          control={<Checkbox color="secondary" value="hospitalaria" onChange={this.handleRadioChange('tipo')}/>}
+          label="Hospitalaria"
+          labelPlacement="end"
+          />
+
+          <FormControlLabel
+          control={<Checkbox color="secondary" value="vial" onChange={this.handleRadioChange('tipo')}/>}
+          label="Obra vial"
+          labelPlacement="end"
+          />
+
+          <FormControlLabel
+          control={<Checkbox color="secondary" value="penitenciaria" onChange={this.handleRadioChange('tipo')}/>}
+          label="Penitenciaria"
+          labelPlacement="end"
+          />
+      </FormGroup>
         </FormControl>
         <Button style={{marginTop:'20px'}} variant="contained" color="primary" href="#contained-buttons">
             Filtrar

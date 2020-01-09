@@ -1,7 +1,6 @@
 import React , {useState, useEffect} from 'react';
 import '../App.scss';
 import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import planeSvg from '../../images/airport.svg';
 import hospitalSvg from '../../images/hospitalfix.svg';
 import publicSvg from '../../images/public_building.svg';
@@ -11,22 +10,63 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import Search from '@material-ui/icons/Search';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
-  margin: {
-    margin: theme.spacing(1),
+  search: {
+    marginTop: theme.spacing(1),
+    marginLeft: '5px',
+    width: 'calc(100% - 10px)',
   },
 }));
 
-export default function PlaceList(props){
+const PlaceList = props => {
   
   const classes = useStyles();
   
   const [points, setPoints] = useState([]);
 
+  const [filtered, setFiltered] = useState([]);
+
+  const openDialog = (index, name) => () => {
+    props.clickedLi(index, name);
+  }
+
+  const handleChange = (e) => {
+        // Variable to hold the original version of the list
+    let currentList = [];
+        // Variable to hold the filtered list before putting into state
+    let newList = [];
+        // If the search bar isn't empty
+    if (e.target.value !== "") {
+      // Assign the original list to currentList
+      currentList = points;
+
+      // Use .filter() to determine which items should be displayed
+      // based on the search terms
+      newList = currentList.filter(item => {
+        // change current item to lowercase
+        const lc = item.name.toLowerCase();
+        // change search term to lowercase
+        const filter = e.target.value.toLowerCase();
+        // check to see if the current list item includes the search term
+        // If it does, it will be added to newList. Using lowercase eliminates
+        // issues with capitalization in search terms and search content
+        if(lc.includes(filter)){
+          return item;
+        }
+      });
+    } else {
+            // If the search bar is empty, set newList to original task list
+      newList = points;
+    }
+        // Set the filtered state based on what our rules added to newList
+    setFiltered(newList);
+  }
+
   const displayStore = () => {
-    return points.map((store, index) => {
+    return filtered.map((store, index) => {
         let iconURL;
         if(store.type == 'hospitalaria'){
           iconURL = hospitalSvg;
@@ -50,7 +90,7 @@ export default function PlaceList(props){
             color = '#454';
         }
         const type = store.type.charAt(0).toUpperCase() + store.type.slice(1)
-         return <li key={index} style={{borderLeft:`4px solid ${color}`}} >
+         return <li onClick={openDialog(index, store.name)} key={index} style={{borderLeft:`4px solid ${color}`}} >
                     <div className="circle-img" style={{marginLeft:'10px',backgroundColor:color}}><img style={{width:'15px'}} 
                     src={"data:image/svg+xml;utf8,"+iconURL} />
                     </div>
@@ -65,23 +105,25 @@ export default function PlaceList(props){
 
   useEffect(() => {
       setPoints(props.points);
+      setFiltered(props.points);
   }, [props.points]);
 
 
   return (
   <section className="place-list">
-    <FormControl className={classes.margin}>
+    <FormControl className={classes.search}>
       <InputLabel htmlFor="input-with-icon-adornment">Buscar proyectos</InputLabel>
       <Input
+        onChange={handleChange}
         id="input-with-icon-adornment"
         startAdornment={
           <InputAdornment position="start">
-            <AccountCircle />
+            <Search />
           </InputAdornment>
         }
       />
     </FormControl>
-      <h1 style={{marginLeft:'10px'}}>Proyects</h1>
+      <h1 style={{marginLeft:'10px'}}>Proyectos</h1>
       <ul>
           {displayStore()}
       </ul>
@@ -89,3 +131,9 @@ export default function PlaceList(props){
   );
   
 }
+
+PlaceList.propTypes = {
+  collapsed: PropTypes.bool
+};
+
+export default PlaceList;
