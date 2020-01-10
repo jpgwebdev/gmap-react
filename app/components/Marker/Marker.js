@@ -16,6 +16,17 @@ const Wrapper = styled.div`
   &:hover {
     z-index: 1;
   }
+  &:after {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: ${props => (props.borderColor ? props.borderColor : '#999 ')};
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    z-index: -1;
+  }
 `;
 
 const Marker = props => (
@@ -23,7 +34,7 @@ const Marker = props => (
     {...props}
     {...props.onClick ? { onClick: props.onClick } : {}}
   >
-    <img style={{marginLeft:'5px',marginTop:'3px',width:'17px',height:'17px'}} src={'data:image/svg+xml;utf8,'+props.icon} alt="aeropuerto"/>
+    <img style={{marginLeft:'5px',marginTop:'3px',width:'17px',height:'17px', zIndex:'2'}} src={'data:image/svg+xml;utf8,'+props.icon} alt="aeropuerto"/>
   </Wrapper>
 );
 
