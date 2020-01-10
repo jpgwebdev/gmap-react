@@ -29,8 +29,8 @@ const PlaceList = props => {
 
   const [filtered, setFiltered] = useState([]);
 
-  const openDialog = (index, name) => () => {
-    props.clickedLi(index, name);
+  const locateMarker = (index, lat, lng) => () => {
+    props.clickedLi(index, lat, lng);
   }
 
   const handleChange = (e) => {
@@ -89,8 +89,9 @@ const PlaceList = props => {
         }else if(store.estado == 'estudio'){
             color = '#454';
         }
+
         const type = store.type.charAt(0).toUpperCase() + store.type.slice(1)
-         return <li onClick={openDialog(index, store.name)} key={index} style={{borderLeft:`4px solid ${color}`}} >
+         return <li onClick={locateMarker(index, store.lat, store.lng)} key={index} style={{borderLeft:`4px solid ${color}`}} >
                     <div className="circle-img" style={{marginLeft:'10px',backgroundColor:color}}><img style={{width:'15px'}} 
                     src={"data:image/svg+xml;utf8,"+iconURL} />
                     </div>
@@ -104,9 +105,9 @@ const PlaceList = props => {
 
 
   useEffect(() => {
-      setPoints(props.points);
-      setFiltered(props.points);
-  }, [props.points]);
+      setPoints(props.locations);
+      setFiltered(props.locations);
+  }, [props.locations]);
 
 
   return (

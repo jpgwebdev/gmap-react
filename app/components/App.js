@@ -14,6 +14,7 @@ import mapStyles from './mapStyles';
 import FilterList from './FilterList/FilterList';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Marker from './Marker/Marker';
+import useSupercluster from "use-supercluster";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,8 +39,11 @@ export default function App(){
   // setup map
   const mapRef = useRef();
 
-  const [points, setPoints] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [filtered, setFiltered] = useState([]);
+  const [zoom, setZoom] = useState([]);
+  const [bounds, setBounds] = useState([]);
+
   //loader of markers call
   let [loading, setLoading] = useState(true);
   
@@ -57,16 +61,18 @@ export default function App(){
     })        
     .then(response => {
       console.log('Response',JSON.parse(response.data));
-      setPoints(JSON.parse(response.data));
+      setLocations(JSON.parse(response.data));
       setFiltered(JSON.parse(response.data))
       setLoading(false);
     });
   }
 
   // Open dialog if click item list
-  const openFromList = (index, name) => {
+  const openFromList = (index, lat, lng) => {
     //console.log('Clicked child');
-    showDialogWithData(index, name);
+    const bounds = new window.google.maps.LatLngBounds();
+    bounds.extend({lat:lat,lng:lng})
+    mapRef.current.fitBounds(bounds);
   }
   
   // change var dialog to closed if clicked close in infodialog component
@@ -78,23 +84,40 @@ export default function App(){
   const getEstadoFilters = (filters) => {
     console.log('Filters in parent estado',filters);
     let newFilter = [];
+    const filterBounds = new window.google.maps.LatLngBounds();
     if(filters.length > 0){
       filters.map((name, index) => {
         console.log('Por asignar',newFilter.length);
         if(newFilter.length >= 1){
           console.log('entro en concat');
           console.log("Filtered array:",filtered);
-          newFilter = filtered.concat(points.filter(point => point.estado == name));
+          newFilter = filtered.concat(locations.filter((point) => {
+            if(point.estado == name){
+              filterBounds.extend({lat: point.lat, lng: point.lng});
+              return point;
+            }
+          }));
         }else{
           console.log('entro en no concat');
-          newFilter = points.filter(point => point.estado == name);
+          newFilter = locations.filter((point) => {
+            if(point.estado == name){
+              filterBounds.extend({lat: point.lat, lng: point.lng});
+              return point;
+            }
+          });
         }
         console.log("Filtrado #"+index+": ",newFilter);
         setFiltered(newFilter);
+        mapRef.current.fitBounds(filterBounds);
       });
 
     }else{
-      setFiltered(points);
+      setFiltered(locations);
+      const allBounds = new window.google.maps.LatLngBounds();
+      locations.map(location => {
+        allBounds.extend({lat: location.lat, lng: location.lng});
+      });
+      mapRef.current.fitBounds(allBounds);
     }
   }
 
@@ -107,17 +130,17 @@ export default function App(){
         if(newFilter.length >= 1){
           console.log('entro en concat');
           console.log("Filtered array:",filtered);
-          newFilter = filtered.concat(points.filter(point => point.type == name));
+          newFilter = filtered.concat(locations.filter(point => point.type == name));
         }else{
           console.log('entro en no concat');
-          newFilter = points.filter(point => point.type == name);
+          newFilter = locations.filter(point => point.type == name);
         }
         console.log("Filtrado #"+index+": ",newFilter);
         setFiltered(newFilter);
       });
 
     }else{
-      setFiltered(points);
+      setFiltered(locations);
     }
   }
 
@@ -140,6 +163,26 @@ export default function App(){
   useEffect(() => {
     loadMarkers();
   }, []);
+  
+  const points = locations.map(project => ({
+    type: "Feature",
+    properties: { cluster: false, estado: project.estado, type: project.type },
+    geometry: {
+      type: "Point",
+      coordinates: [
+        project.lng,
+        project.lat
+      ]
+    }
+  }));
+
+  const {clusters} = useSupercluster({
+    points,
+    bounds,
+    zoom,
+    options: {radius: 75, maxZoom:20}
+  });
+
 
   return (
   <section id="map">
@@ -159,6 +202,15 @@ export default function App(){
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map }) => {
           mapRef.current = map;
+        }}
+        onChange={({zoom,bounds}) => {
+          setZoom(zoom);
+          setBounds([
+            bounds.nw.lng,
+            bounds.se.lat,
+            bounds.se.lng,
+            bounds.nw.lat
+          ]);
         }}
       >
       {filtered.length > 0 ? filtered.map((store, index) => {
@@ -195,8 +247,9 @@ export default function App(){
           lng={store.lng}
           onClick={onMarkerClick(index, store.name)} />
       }) : ''}
+      
       </GoogleMapReact>
-      <PlaceList points={points} clickedLi={openFromList}/>
+      <PlaceList locations={locations} clickedLi={openFromList}/>
       <FilterList estadoFilters={getEstadoFilters} tipoFilters={getTipoFilters}/>
       <InfoDialog openDialog={openDialog} data={data} parentStatus={dialogStatus}/>
   </section>
