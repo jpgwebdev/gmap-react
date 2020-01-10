@@ -70,9 +70,10 @@ export default function App(){
   // Open dialog if click item list
   const openFromList = (index, lat, lng) => {
     //console.log('Clicked child');
-    const bounds = new window.google.maps.LatLngBounds();
-    bounds.extend({lat:lat,lng:lng})
-    mapRef.current.fitBounds(bounds);
+    const singleBound = new window.google.maps.LatLngBounds();
+    singleBound.extend({lat:lat,lng:lng});
+    mapRef.current.setCenter(singleBound.getCenter());
+    mapRef.current.setZoom(9);
   }
   
   // change var dialog to closed if clicked close in infodialog component
@@ -106,9 +107,18 @@ export default function App(){
             }
           });
         }
+
         console.log("Filtrado #"+index+": ",newFilter);
         setFiltered(newFilter);
-        mapRef.current.fitBounds(filterBounds);
+        console.log(filterBounds);
+        if(filtered.length < 1){
+          mapRef.current.setCenter(filterBounds.getCenter());
+          mapRef.current.setZoom(9);
+        }else{
+          mapRef.current.fitBounds(filterBounds);
+        }
+
+
       });
 
     }else{
@@ -243,6 +253,7 @@ export default function App(){
           key={index}
           borderColor={bC}
           icon={iconURL}
+          name={store.name}
           lat={store.lat}
           lng={store.lng}
           onClick={onMarkerClick(index, store.name)} />

@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   cursor: ${props => (props.onClick ? 'pointer' : 'default')};
   &:hover {
     z-index: 1;
+    opacity:.7;
   }
   &:after {
     content: "";
@@ -34,7 +35,12 @@ const Marker = props => (
     {...props}
     {...props.onClick ? { onClick: props.onClick } : {}}
   >
-    <img style={{marginLeft:'5px',marginTop:'3px',width:'17px',height:'17px', zIndex:'2'}} src={'data:image/svg+xml;utf8,'+props.icon} alt="aeropuerto"/>
+    <div className="popup" 
+    style={{zIndex:'2',background:'#fff',padding:'5px',position:'absolute',bottom:'30px',width:'100px'}}>
+      {props.name}
+    </div>
+    <img style={{marginLeft:'5px',marginTop:'3px',width:'17px',height:'17px', zIndex:'2'}} 
+    src={'data:image/svg+xml;utf8,'+props.icon} alt="aeropuerto"/>
   </Wrapper>
 );
 
@@ -46,6 +52,7 @@ Marker.propTypes = {
   borderColor: PropTypes.string,
   icon: PropTypes.string,
   onClick: PropTypes.func,
+  name: PropTypes.string
 };
 
 export default Marker;
