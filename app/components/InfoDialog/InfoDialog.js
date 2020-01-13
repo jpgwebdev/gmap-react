@@ -65,6 +65,7 @@ export default function InfoDialog(props){
 
     const calcRoute = (start, end) => () => {
         props.showRoute(start, end);
+        handleClose();
     }
 
     React.useEffect(() => {

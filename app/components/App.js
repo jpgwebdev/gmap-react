@@ -15,6 +15,7 @@ import FilterList from './FilterList/FilterList';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Marker from './Marker/Marker';
 import useSupercluster from "use-supercluster";
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,6 +28,12 @@ const useStyles = makeStyles(theme => ({
     left:'0',
     zIndex:'99'
   },
+  button: {
+    position:'fixed',
+    top:'20px',
+    left: '320px',
+    zIndex: '9'
+  }
 }));
 
 export default function App(){
@@ -38,12 +45,13 @@ export default function App(){
   const classes = useStyles();
   // setup map
   const mapRef = useRef();
-  const [directionsService, setDirectionsService] = useState(null);
+  const directionRef = useRef();
+
   const [locations, setLocations] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [zoom, setZoom] = useState([]);
   const [bounds, setBounds] = useState([]);
-
+  const [backVisible, setBackVisible] = useState(false);
   //loader of markers call
   let [loading, setLoading] = useState(true);
   
@@ -143,15 +151,25 @@ export default function App(){
       }
 
     }else{
-      setFiltered(locations);
-      const allBounds = new window.google.maps.LatLngBounds();
-      locations.map(location => {
-        allBounds.extend({lat: location.lat, lng: location.lng});
-      });
-      mapRef.current.fitBounds(allBounds);
+      fitAllBounds();
     }
   }
 
+  const fitAllBounds = () => {
+    setFiltered(locations);
+    const allBounds = new window.google.maps.LatLngBounds();
+    locations.map(location => {
+      allBounds.extend({lat: location.lat, lng: location.lng});
+    });
+    mapRef.current.fitBounds(allBounds);
+  }
+
+  const closeRender = () => {
+    console.log('close render');
+    directionRef.current.setMap(null);
+    setBackVisible(false);
+    fitAllBounds();
+  }
 
   // open dialog and pass data
   const showDialogWithData = (store) => {
@@ -167,10 +185,9 @@ export default function App(){
   }
 
   const calcRoute = (start, end) => {
+    setBackVisible(true);
     console.log('Calc route in APP.JS', start);
     let directionsService = new window.google.maps.DirectionsService();
-    let directionsRenderer = new window.google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(mapRef.current);
     let request = {
       origin: start,
       destination: end,
@@ -178,16 +195,17 @@ export default function App(){
     };
     directionsService.route(request, function(result, status) {
       if (status == 'OK') {
-        directionsRenderer.setDirections(result);
+        directionRef.current.setDirections(result);
       }
     });
+    directionRef.current.setMap(mapRef.current);
   }
 
   //load markers
   useEffect(() => {
     loadMarkers();
   }, []);
-  
+
   const points = locations.map(project => ({
     type: "Feature",
     properties: { cluster: false, estado: project.estado, type: project.type },
@@ -224,8 +242,9 @@ export default function App(){
         defaultZoom={5}
         options={createMapOptions}
         yesIWantToUseGoogleMapApiInternals
-        onGoogleApiLoaded={({ map }) => {
+        onGoogleApiLoaded={({ map, maps}) => {
           mapRef.current = map;
+          directionRef.current = new maps.DirectionsRenderer();
         }}
         onChange={({zoom,bounds}) => {
           setZoom(zoom);
@@ -235,10 +254,11 @@ export default function App(){
             bounds.se.lng,
             bounds.nw.lat
           ]);
+
         }}
       >
-      {filtered.length > 0 ? filtered.map((store, index) => {
 
+      {filtered.length > 0 ? filtered.map((store, index) => {
         let iconURL;
         if(store.type == 'hospitalaria'){
           iconURL = hospitalSvg;
@@ -272,8 +292,14 @@ export default function App(){
           lng={store.lng}
           onClick={onMarkerClick(store)} />
       }) : ''}
+
       </GoogleMapReact>
-      <PlaceList locations={locations} clickedLi={openFromList}/>
+      {backVisible ?
+      <Button className={classes.button} variant="contained" color="primary" onClick={closeRender}>
+        Volver
+      </Button>
+       : null}
+      <PlaceList locations={filtered} clickedLi={openFromList}/>
       <FilterList  changeFilters={getFilters}/>
       <InfoDialog showRoute={calcRoute} openDialog={openDialog} data={data} parentStatus={dialogStatus}/>
   </section>

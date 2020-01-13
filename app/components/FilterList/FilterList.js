@@ -1,9 +1,6 @@
 import React from 'react';
 import '../App.scss';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
@@ -63,12 +60,6 @@ class PlaceList extends React.Component{
         <FormGroup aria-label="estado">
           
             <FormControlLabel
-            control={<Checkbox color="primary" value="todos" onChange={this.handleRadioChange('estado')}/>}
-            label="Todos"
-            labelPlacement="end"
-            />
-
-            <FormControlLabel
             control={<Checkbox color="primary" value="explotacion" onChange={this.handleRadioChange('estado')}/>}
             label="Explotación"
             labelPlacement="end"
@@ -98,12 +89,6 @@ class PlaceList extends React.Component{
         <FormLabel component="legend">Tipo de Obra</FormLabel>
         <FormGroup aria-label="estado">
           
-          <FormControlLabel
-          control={<Checkbox color="secondary" value="todos" onChange={this.handleRadioChange('tipo')}/>}
-          label="Todos"
-          labelPlacement="end"
-          />
-
           <FormControlLabel
           control={<Checkbox color="secondary" value="riego" onChange={this.handleRadioChange('tipo')}/>}
           label="Obras de riego"
@@ -135,9 +120,6 @@ class PlaceList extends React.Component{
           />
       </FormGroup>
         </FormControl>
-        <Button style={{marginTop:'20px'}} variant="contained" color="primary" href="#contained-buttons">
-            Filtrar
-        </Button>
         </div>
     );
   }
