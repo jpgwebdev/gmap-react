@@ -205,7 +205,7 @@ export default function App(){
       }
 
       <GoogleMapReact
-        bootstrapURLKeys={{ key: 'AIzaSyCPrJBzd1PuG0sZnQd0IwVSJBUmxHxMvMY' }}
+        bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_KEY }}
         defaultCenter={{lat: -33.502491, lng: -70.654811}}
         defaultZoom={5}
         options={createMapOptions}

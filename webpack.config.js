@@ -4,8 +4,20 @@ let HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
     filename: 'index.html',
     inject: 'body',
 });
+const webpack = require('webpack');
+const dotenv = require('dotenv');
 
-module.exports = {
+module.exports = () => {
+    // call dotenv and it will return an Object with a parsed key 
+    const env = dotenv.config().parsed;
+    
+    // reduce it to a nice object, the same as before
+    const envKeys = Object.keys(env).reduce((prev, next) => {
+    prev[`process.env.${next}`] = JSON.stringify(env[next]);
+    return prev;
+    }, {});
+
+    return {
     entry: __dirname +'/app/index.tsx',
     module:{
         rules:[
@@ -36,5 +48,9 @@ module.exports = {
         filename: 'transformed.js',
         path: __dirname + '/build'
     },
-    plugins:[HTMLWebpackPluginConfig]
+    plugins:[
+        HTMLWebpackPluginConfig,
+        new webpack.DefinePlugin(envKeys)
+    ]
+    }
 }
