@@ -15,7 +15,6 @@ const Wrapper = styled.div`
   cursor: ${props => (props.onClick ? 'pointer' : 'default')};
   &:hover {
     z-index: 1;
-    opacity:.7;
   }
   &:after {
     content: "";
@@ -28,6 +27,20 @@ const Wrapper = styled.div`
     left: 0px;
     z-index: -1;
   }
+  &:hover .popup{
+    display:block;
+  }
+`;
+
+const Popup = styled.div`
+  background:#fff;
+  padding:5px;
+  display:none;
+  position:absolute;
+  border-radius:4px;
+  bottom:30px;
+  width:100px;
+  z-index:2;
 `;
 
 const Marker = props => (
@@ -35,10 +48,9 @@ const Marker = props => (
     {...props}
     {...props.onClick ? { onClick: props.onClick } : {}}
   >
-    <div className="popup" 
-    style={{zIndex:'2',background:'#fff',padding:'5px',position:'absolute',bottom:'30px',width:'100px'}}>
+    <Popup className="popup">
       {props.name}
-    </div>
+    </Popup>
     <img style={{marginLeft:'5px',marginTop:'3px',width:'17px',height:'17px', zIndex:'2'}} 
     src={'data:image/svg+xml;utf8,'+props.icon} alt="aeropuerto"/>
   </Wrapper>

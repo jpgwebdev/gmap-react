@@ -63,6 +63,10 @@ export default function InfoDialog(props){
         props.parentStatus(false);
     };
 
+    const calcRoute = (start, end) => () => {
+        props.showRoute(start, end);
+    }
+
     React.useEffect(() => {
         setOpen(props.openDialog);
         setData(props.data);
@@ -75,24 +79,29 @@ export default function InfoDialog(props){
         </DialogTitle>
         <DialogContent dividers>
             <Typography gutterBottom>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-            in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+            Decreto Supremo de Adjudicación:
+            DS MOP Nº33 con fecha 05/03/2018
+            Mandante:Ministerio de Obras Públicas (MOP)
+            Unidad Ejecutora: Dirección General de Concesiones de Obras Públicas
             </Typography>
             <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-            lacus vel augue laoreet rutrum faucibus dolor auctor.
+            Concesionaria: Sociedad Concesionaria Conexión Vial Ruta 78-68 S.A.(Grupo Costanera)
+            Longitud trazado:9 km.
             </Typography>
             <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-            scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-            auctor fringilla.
+            Inicio de la concesión: 21 de abril 2018
+            Plazo de la concesión: 540 meses (máximo)
             </Typography>
         </DialogContent>
+        {
+        (data && data.start && data.end) ?
         <DialogActions>
-            <Button autoFocus onClick={handleClose} color="primary">
-            Close
-            </Button>
+            <Button autoFocus onClick={calcRoute(data ? data.start : '',data ? data.end : '')} color="primary">
+                Ver ruta
+            </Button> 
         </DialogActions>
+        : null
+         }
         </Dialog>
     );
 

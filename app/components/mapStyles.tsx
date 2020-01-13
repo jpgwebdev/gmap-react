@@ -14,10 +14,10 @@ export default [
         "elementType": "geometry",
         "stylers": [
             {
-                "lightness": 50
+                "lightness": 100
             },
             {
-                "visibility": "simplified"
+                "visibility": "on"
             }
         ]
     },
@@ -26,7 +26,7 @@ export default [
         "elementType": "labels",
         "stylers": [
             {
-                "visibility": "off"
+                "visibility": "on"
             }
         ]
     }

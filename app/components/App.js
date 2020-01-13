@@ -38,7 +38,7 @@ export default function App(){
   const classes = useStyles();
   // setup map
   const mapRef = useRef();
-
+  const [directionsService, setDirectionsService] = useState(null);
   const [locations, setLocations] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [zoom, setZoom] = useState([]);
@@ -155,18 +155,33 @@ export default function App(){
   }
 
   // open dialog and pass data
-  const showDialogWithData = (index, name) => {
-    let data = {
-      name: name
-    }
+  const showDialogWithData = (store) => {
+
     setOpenDialog(true);
-    setData(data);
+    setData(store);
   }
 
   // on marker click
-  const onMarkerClick = (index, name) => (event) => {
+  const onMarkerClick = (store) => (event) => {
     //console.log('Clicked marker #'+index);
-    showDialogWithData(index, name);
+    showDialogWithData(store);
+  }
+
+  const calcRoute = (start, end) => {
+    console.log('Calc route in APP.JS', start);
+    let directionsService = new window.google.maps.DirectionsService();
+    let directionsRenderer = new window.google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(mapRef.current);
+    let request = {
+      origin: start,
+      destination: end,
+      travelMode: 'DRIVING'
+    };
+    directionsService.route(request, function(result, status) {
+      if (status == 'OK') {
+        directionsRenderer.setDirections(result);
+      }
+    });
   }
 
   //load markers
@@ -256,13 +271,12 @@ export default function App(){
           name={store.name}
           lat={store.lat}
           lng={store.lng}
-          onClick={onMarkerClick(index, store.name)} />
+          onClick={onMarkerClick(store)} />
       }) : ''}
-      
       </GoogleMapReact>
       <PlaceList locations={locations} clickedLi={openFromList}/>
       <FilterList estadoFilters={getEstadoFilters} tipoFilters={getTipoFilters}/>
-      <InfoDialog openDialog={openDialog} data={data} parentStatus={dialogStatus}/>
+      <InfoDialog showRoute={calcRoute} openDialog={openDialog} data={data} parentStatus={dialogStatus}/>
   </section>
   );
   
