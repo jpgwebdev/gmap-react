@@ -32,22 +32,22 @@ class PlaceList extends React.Component{
       if(name == 'estado'){
         this.setState(prevState=>({radioEstado:[...prevState.radioEstado,radioVal]}),() => {
           //console.log('Updated array estado',this.state.radioEstado);
-          this.props.estadoFilters(this.state.radioEstado);
+          this.props.changeFilters({estado:this.state.radioEstado,tipo:this.state.radioTipo});
         })
       }else if(name == 'tipo'){
         this.setState(prevState=>({radioTipo:[...prevState.radioTipo,radioVal]}),() => {
           //console.log('Updated array tipo',this.state.radioTipo);
-          this.props.tipoFilters(this.state.radioTipo);
+          this.props.changeFilters({estado:this.state.radioEstado,tipo:this.state.radioTipo});
         })
       }
     }else{
       if(name == 'estado'){
         this.setState(prevState => ({ radioEstado: prevState.radioEstado.filter(name => name !== radioVal) }),() => {
-          this.props.estadoFilters(this.state.radioEstado);
+          this.props.changeFilters({estado:this.state.radioEstado,tipo:this.state.radioTipo});
         });
       }else if(name  == 'tipo'){
         this.setState(prevState => ({ radioTipo: prevState.radioTipo.filter(name => name !== radioVal) }),() => {
-          this.props.tipoFilters(this.state.radioTipo);
+          this.props.changeFilters({estado:this.state.radioEstado,tipo:this.state.radioTipo});
         });
       }
       

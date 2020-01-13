@@ -82,12 +82,12 @@ export default function App(){
     setOpenDialog(status);
   }
 
-  const getEstadoFilters = (filters) => {
+  const getFilters = (filters) => {
     console.log('Filters in parent estado',filters);
     let newFilter = [];
     const filterBounds = new window.google.maps.LatLngBounds();
-    if(filters.length > 0){
-      filters.map((name, index) => {
+    if(filters.estado.length > 0 || filters.tipo.length > 0){
+      filters.estado.map((name, index) => {
         console.log('Por asignar',newFilter.length);
         if(newFilter.length >= 1){
           console.log('entro en concat');
@@ -107,19 +107,40 @@ export default function App(){
             }
           });
         }
-
-        console.log("Filtrado #"+index+": ",newFilter);
-        setFiltered(newFilter);
-        console.log(filterBounds);
-        if(filtered.length < 1){
-          mapRef.current.setCenter(filterBounds.getCenter());
-          mapRef.current.setZoom(9);
-        }else{
-          mapRef.current.fitBounds(filterBounds);
-        }
-
-
       });
+
+      filters.tipo.map((name, index) => {
+        console.log('Por asignar',newFilter.length);
+        if(newFilter.length >= 1){
+          console.log('entro en concat');
+          console.log("Filtered array:",filtered);
+          newFilter = filtered.concat(locations.filter((point) => {
+            if(point.type == name){
+              filterBounds.extend({lat: point.lat, lng: point.lng});
+              return point;
+            }
+          }));
+        }else{
+          console.log('entro en no concat');
+          newFilter = locations.filter((point) => {
+            if(point.type == name){
+              filterBounds.extend({lat: point.lat, lng: point.lng});
+              return point;
+            }
+          });
+        }
+      });
+
+      console.log("Filtrado : ",newFilter);
+      setFiltered(newFilter);
+      console.log(filterBounds);
+
+      if(filtered.length < 1){
+        mapRef.current.setCenter(filterBounds.getCenter());
+        mapRef.current.setZoom(9);
+      }else{
+        mapRef.current.fitBounds(filterBounds);
+      }
 
     }else{
       setFiltered(locations);
@@ -131,28 +152,6 @@ export default function App(){
     }
   }
 
-  const getTipoFilters = (filters) => {
-    console.log('Filters in parent estado',filters);
-    let newFilter = [];
-    if(filters.length > 0){
-      filters.map((name, index) => {
-        console.log('Por asignar',newFilter.length);
-        if(newFilter.length >= 1){
-          console.log('entro en concat');
-          console.log("Filtered array:",filtered);
-          newFilter = filtered.concat(locations.filter(point => point.type == name));
-        }else{
-          console.log('entro en no concat');
-          newFilter = locations.filter(point => point.type == name);
-        }
-        console.log("Filtrado #"+index+": ",newFilter);
-        setFiltered(newFilter);
-      });
-
-    }else{
-      setFiltered(locations);
-    }
-  }
 
   // open dialog and pass data
   const showDialogWithData = (store) => {
@@ -275,7 +274,7 @@ export default function App(){
       }) : ''}
       </GoogleMapReact>
       <PlaceList locations={locations} clickedLi={openFromList}/>
-      <FilterList estadoFilters={getEstadoFilters} tipoFilters={getTipoFilters}/>
+      <FilterList  changeFilters={getFilters}/>
       <InfoDialog showRoute={calcRoute} openDialog={openDialog} data={data} parentStatus={dialogStatus}/>
   </section>
   );
