@@ -90,13 +90,13 @@ const PlaceList = props => {
             color = '#454';
         }
 
-        const type = store.type.charAt(0).toUpperCase() + store.type.slice(1)
+
          return <li onClick={locateMarker(index, store.lat, store.lng)} key={index} style={{borderLeft:`4px solid ${color}`}} >
                     <div className="circle-img" style={{marginLeft:'10px',backgroundColor:color}}><img style={{width:'15px'}} 
                     src={"data:image/svg+xml;utf8,"+iconURL} />
                     </div>
                     <div style={{marginLeft:'20px'}}>
-                        <div className="type">{type} en {store.estado}</div>
+                        <div className="type">{store.labelType} en {store.estado}</div>
                         <div>{store.name}</div>
                     </div>
                 </li>
