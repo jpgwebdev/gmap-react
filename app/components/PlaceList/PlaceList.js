@@ -113,10 +113,10 @@ const PlaceList = props => {
   return (
   <section className="place-list">
     <FormControl className={classes.search}>
-      <InputLabel htmlFor="input-with-icon-adornment">Buscar proyectos</InputLabel>
       <Input
+        style={{marginTop: '5px', marginLeft:'10px', marginRight:'10px'}}
         onChange={handleChange}
-        id="input-with-icon-adornment"
+        id="input-with-icon-adornment" placeholder="Buscar proyecto..."
         startAdornment={
           <InputAdornment position="start">
             <Search />
@@ -124,7 +124,7 @@ const PlaceList = props => {
         }
       />
     </FormControl>
-      <h1 style={{marginLeft:'10px'}}>Proyectos</h1>
+      <h1 style={{marginLeft:'10px', fontSize:'21px', marginBottom: '-5px', marginTop: '21px'}}>Proyectos</h1>
       <ul>
           {displayStore()}
       </ul>

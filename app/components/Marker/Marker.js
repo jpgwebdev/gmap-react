@@ -52,7 +52,7 @@ const Marker = props => (
       {props.name}
     </Popup>
     <img style={{marginLeft:'5px',marginTop:'3px',width:'17px',height:'17px', zIndex:'2'}} 
-    src={'data:image/svg+xml;utf8,'+props.icon} alt="aeropuerto"/>
+    src={'data:image/svg+xml;utf8,'+props.icon} alt="marker"/>
   </Wrapper>
 );
 

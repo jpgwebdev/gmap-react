@@ -11,6 +11,12 @@ const styles = {
       marginTop:'10px',
       display: 'block',
       fontSize:'.8em'
+    },
+    legend: {
+      color: 'black',
+      fontSize: '18px',
+      fontWeight: 'bold',
+      marginBottom: '5px'
     }
   };
 class PlaceList extends React.Component{
@@ -56,7 +62,7 @@ class PlaceList extends React.Component{
     return (
         <div className="map-filters">
         <FormControl className={classes.formControl}>
-        <FormLabel component="legend">Estado de Obra</FormLabel>
+        <FormLabel className={classes.legend} component="legend">Estado de Obra</FormLabel>
         <FormGroup aria-label="estado">
           
             <FormControlLabel
@@ -86,7 +92,7 @@ class PlaceList extends React.Component{
         </FormGroup>
         </FormControl>
         <FormControl className={classes.formControl}>
-        <FormLabel component="legend">Tipo de Obra</FormLabel>
+        <FormLabel className={classes.legend} component="legend">Tipo de Obra</FormLabel>
         <FormGroup aria-label="estado">
           
           <FormControlLabel
