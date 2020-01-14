@@ -7,7 +7,6 @@ html,body{
 .map-filters{
     position: fixed;
     z-index: 99;
-    min-height: 50vh;
     top:10px;
     right:10px;
     background: #fff;
@@ -66,4 +65,8 @@ li:hover{
     border-radius: 100%;
     width:35px;
     height: 35px;
+}
+
+.spanLabel {
+    color: #777;
 }

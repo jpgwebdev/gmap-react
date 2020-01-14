@@ -6,8 +6,7 @@ const Wrapper = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 25px;
-  height: 25px;
+  padding: 10px;
   background-color: ${props => (props.borderColor ? props.borderColor : '#999 ')};
   border-radius: 100%;
   user-select: none;
@@ -19,12 +18,14 @@ const Wrapper = styled.div`
   &:after {
     content: "";
     display: block;
-    width: 10px;
-    height: 10px;
+    width: 20px;
+    height: 20px;
     background: ${props => (props.borderColor ? props.borderColor : '#999 ')};
     position: absolute;
-    bottom: 0px;
-    left: 0px;
+    bottom: -3px;
+    left: 50%;
+    margin-left: -10px;
+    transform: rotate(45deg);
     z-index: -1;
   }
   &:hover .popup{
@@ -34,13 +35,16 @@ const Wrapper = styled.div`
 
 const Popup = styled.div`
   background:#fff;
-  padding:5px;
+  padding:10px 20px;
   display:none;
   position:absolute;
-  border-radius:4px;
-  bottom:30px;
-  width:100px;
+  border-radius: 10px 10px 10px 0px;
+  bottom: 55px;
+  width:150px;
+  left: 20px;
   z-index:2;
+  font-size: 14px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
 `;
 
 const Marker = props => (
@@ -51,8 +55,8 @@ const Marker = props => (
     <Popup className="popup">
       {props.name}
     </Popup>
-    <img style={{marginLeft:'5px',marginTop:'3px',width:'17px',height:'17px', zIndex:'2'}} 
-    src={'data:image/svg+xml;utf8,'+props.icon} alt="aeropuerto"/>
+    <img style={{marginLeft:'0px',marginTop:'0px',width:'24px',height:'24px', zIndex:'2'}} 
+    src={'data:image/svg+xml;utf8,'+props.icon} alt="marker"/>
   </Wrapper>
 );
 

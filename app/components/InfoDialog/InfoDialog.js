@@ -78,19 +78,32 @@ export default function InfoDialog(props){
         </DialogTitle>
         <DialogContent dividers>
             <Typography gutterBottom>
-            Decreto Supremo de Adjudicación:
-            DS MOP Nº33 con fecha 05/03/2018
-            Mandante:Ministerio de Obras Públicas (MOP)
-            Unidad Ejecutora: Dirección General de Concesiones de Obras Públicas
+                <span class="spanLabel">Decreto Supremo de Adjudicación:</span> <br />DS MOP Nº33 con fecha 05/03/2018
             </Typography>
+            
             <Typography gutterBottom>
-            Concesionaria: Sociedad Concesionaria Conexión Vial Ruta 78-68 S.A.(Grupo Costanera)
-            Longitud trazado:9 km.
+                <span class="spanLabel">Mandante:</span><br /> Ministerio de Obras Públicas (MOP)
             </Typography>
+            
             <Typography gutterBottom>
-            Inicio de la concesión: 21 de abril 2018
-            Plazo de la concesión: 540 meses (máximo)
+                <span class="spanLabel">Unidad Ejecutora:</span><br /> Dirección General de Concesiones de Obras Públicas
             </Typography>
+            
+            <Typography gutterBottom>
+                <span class="spanLabel">Concesionaria:</span><br />
+                Sociedad Concesionaria Conexión Vial Ruta 78-68 S.A.(Grupo Costanera)
+            </Typography>
+            
+            <Typography gutterBottom>
+                <span class="spanLabel">Longitud trazado:</span><br /> 9 km.
+                </Typography>
+            <Typography gutterBottom>
+                <span class="spanLabel">Inicio de la concesión:</span><br /> 21 de abril 2018
+                </Typography>
+            <Typography gutterBottom>
+                <span class="spanLabel">Plazo de la concesión:</span><br /> 540 meses (máximo)
+                </Typography>
+            
         </DialogContent>
         {
         (data && data.start && data.end) ?

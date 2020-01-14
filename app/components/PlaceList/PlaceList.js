@@ -81,22 +81,22 @@ const PlaceList = props => {
         }
         let color;
         if(store.estado == 'explotacion'){
-            color = '#00e676';
+            color = '#009D1A';
         }else if(store.estado == 'licitacion'){
-            color = '#8e0606';
+            color = '#005E9D';
         }else if(store.estado == 'construccion'){
-            color = '#2196f3';
+            color = '#D2AF09';
         }else if(store.estado == 'estudio'){
-            color = '#454';
+            color = '#D75A19';
         }
 
         let estadoText = store.labelEstado.toLowerCase();
          return <li onClick={locateMarker(index, store.lat, store.lng)} key={index} style={{borderLeft:`4px solid ${color}`}} >
-                    <div className="circle-img" style={{marginLeft:'10px',backgroundColor:color}}><img style={{width:'15px'}} 
+                    <div className="circle-img" style={{marginLeft:'10px',backgroundColor:color, padding: '5px', flexShrink:'0'}}><img style={{width:'24px',height:'24px'}} 
                     src={"data:image/svg+xml;utf8,"+iconURL} />
                     </div>
-                    <div style={{marginLeft:'20px'}}>
-                        <div className="type">{store.labelType} en {estadoText}</div>
+                    <div style={{marginLeft:'15px', marginRight: '5px'}}>
+                        <div className="type">{store.labelType} en {store.estado}</div>
                         <div>{store.name}</div>
                     </div>
                 </li>
@@ -113,10 +113,10 @@ const PlaceList = props => {
   return (
   <section className="place-list">
     <FormControl className={classes.search}>
-      <InputLabel htmlFor="input-with-icon-adornment">Buscar proyectos</InputLabel>
       <Input
+        style={{marginTop: '5px', marginLeft:'10px', marginRight:'10px'}}
         onChange={handleChange}
-        id="input-with-icon-adornment"
+        id="input-with-icon-adornment" placeholder="Buscar proyecto..."
         startAdornment={
           <InputAdornment position="start">
             <Search />
@@ -124,7 +124,7 @@ const PlaceList = props => {
         }
       />
     </FormControl>
-      <h1 style={{marginLeft:'10px'}}>Proyectos</h1>
+      <h1 style={{marginLeft:'10px', fontSize:'21px', marginBottom: '-5px', marginTop: '21px'}}>Proyectos</h1>
       <ul>
           {displayStore()}
       </ul>
