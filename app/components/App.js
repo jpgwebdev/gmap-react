@@ -273,13 +273,13 @@ export default function App(){
 
         let bC;
         if(store.estado == 'explotacion'){
-            bC = '#00e676';
+            bC = '#009D1A';
         }else if(store.estado == 'licitacion'){
-            bC = '#8e0606';
+            bC = '#005E9D';
         }else if(store.estado == 'construccion'){
-            bC = '#2196f3';
+            bC = '#D2AF09';
         }else if(store.estado == 'estudio'){
-            bC = '#454';
+            bC = '#D75A19';
         }
 
         return <Marker  

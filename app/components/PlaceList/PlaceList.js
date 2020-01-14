@@ -81,13 +81,13 @@ const PlaceList = props => {
         }
         let color;
         if(store.estado == 'explotacion'){
-            color = '#00e676';
+            color = '#009D1A';
         }else if(store.estado == 'licitacion'){
-            color = '#8e0606';
+            color = '#005E9D';
         }else if(store.estado == 'construccion'){
-            color = '#2196f3';
+            color = '#D2AF09';
         }else if(store.estado == 'estudio'){
-            color = '#454';
+            color = '#D75A19';
         }
 
         const type = store.type.charAt(0).toUpperCase() + store.type.slice(1)
