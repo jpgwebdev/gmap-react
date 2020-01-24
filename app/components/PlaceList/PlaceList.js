@@ -7,7 +7,6 @@ import publicSvg from '../../images/public_building.svg';
 import routeSvg from '../../images/route.svg';
 import trainSvg from '../../images/train.svg';
 import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import Search from '@material-ui/icons/Search';

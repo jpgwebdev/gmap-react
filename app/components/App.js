@@ -81,7 +81,7 @@ export default function App(){
     const singleBound = new window.google.maps.LatLngBounds();
     singleBound.extend({lat:lat,lng:lng});
     mapRef.current.setCenter(singleBound.getCenter());
-    mapRef.current.setZoom(9);
+    mapRef.current.setZoom(12);
   }
   
   // change var dialog to closed if clicked close in infodialog component
